@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Util : MonoBehaviour
+public static class Util
 {
     public static float Round(float num)
     {
@@ -66,4 +66,8 @@ public class Util : MonoBehaviour
             _ => PosEnum.LOWER_RIGHT
         }
     };
+    public static bool Contains(this LayerMask mask, int layer){
+        return ((1 << layer) & mask.value) > 0;
+    }
+    
 }

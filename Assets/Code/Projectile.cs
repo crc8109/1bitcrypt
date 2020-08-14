@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Projectile : MonoBehaviour, ISize
+public class Projectile : MonoBehaviour, IDamageDealer
 {
     [SerializeField]
     float speed;
@@ -11,9 +11,26 @@ public class Projectile : MonoBehaviour, ISize
     [SerializeField]
     Sprite diagonalSprite; 
     SpriteRenderer rend; 
-
+    Info _info; 
+    public Info Info {get{
+        if(_info == null)
+            _info = GetComponent<Info>();
+        return _info; 
+    } private set{
+        _info = value; 
+    }}
+    [SerializeField] 
+    int damage; 
     Vector3 position;
-    Vector3 dir; 
+    Vector3 dir;
+
+    public void Hit(Info thingHit)
+    {
+        if(thingHit.CanBeDamaged){
+            thingHit.Damageable.TakeDamage(damage); 
+        }
+        Destroy(gameObject); 
+    }
 
     public void Setup(Vector3 _pos, Vector3 _dir)
     {
@@ -24,7 +41,7 @@ public class Projectile : MonoBehaviour, ISize
         {
             rend.sprite = straightSprite;
             transform.up = dir;
-            position += dir * Height / 2; 
+            position += dir * Info.Height / 2; 
         }
         else
         {
@@ -47,10 +64,4 @@ public class Projectile : MonoBehaviour, ISize
         position += dir * speed * Time.fixedDeltaTime;
         transform.position = Util.Round(position); 
     }
-
-    public int Width => 8;
-
-    public int Height => 8;
-
-    public Vector2 Center => new Vector2(transform.position.x, transform.position.y);
 }

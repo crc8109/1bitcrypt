@@ -11,11 +11,11 @@ public class Callbacks : MonoBehaviour
     [ShowInInspector]
     List<CB> upCallbacks = new List<CB>();
     [ShowInInspector]
-    List<CB> fixedCallbacks = new List<CB>(); 
+    List<CB> fixedCallbacks = new List<CB>();
 
     private void Awake()
     {
-        t = this; 
+        t = this;
     }
 
 
@@ -23,10 +23,15 @@ public class Callbacks : MonoBehaviour
     private void Update()
     {
         bool didUpdate = false;
-        foreach(var cb in upCallbacks) {            cb.Remaining -= Time.deltaTime;
+        foreach (var cb in upCallbacks)
+        {
+            cb.Remaining -= Time.deltaTime;
             if (cb.Remaining < 0)
             {
-                cb.Action();
+                if (cb.ShouldCheckCaller && cb.Caller != null)
+                {
+                    cb.Action();
+                }
                 didUpdate = true;
             }
         };
@@ -39,13 +44,16 @@ public class Callbacks : MonoBehaviour
     private void FixedUpdate()
     {
         bool didUpdate = false;
-        for(int i = 0; i < fixedCallbacks.Count; i++)
+        for (int i = 0; i < fixedCallbacks.Count; i++)
         {
-            var cb = fixedCallbacks[i]; 
+            var cb = fixedCallbacks[i];
             cb.Remaining -= Time.fixedDeltaTime;
             if (cb.Remaining < 0)
             {
-                cb.Action();
+                if (cb.ShouldCheckCaller && cb.Caller != null)
+                {
+                    cb.Action();
+                }
                 didUpdate = true;
             }
         };
@@ -55,40 +63,24 @@ public class Callbacks : MonoBehaviour
         }
     }
 
-    void UpdateList(List<CB> list, float delta)
-    {
-        bool didUpdate = false;
-        List<CB> toRemove = new List<CB>(); 
-        for(int i = 0; i < fixedCallbacks.Count; i++)
-        {
-            var cb = fixedCallbacks[i]; 
-            cb.Remaining -= delta;
-            if (cb.Remaining < 0)
-            {
-                cb.Action();
-                didUpdate = true;
-                toRemove.Add(cb); 
-            }
-        };
-        if (didUpdate) {
-            toRemove.ForEach(cb => list.Remove(cb));
-        }
-    }
-
-    public static void Add(Action action, float duration)
+    public static void Add(Action action, float duration, GameObject caller = null)
     {
         t.upCallbacks.Add(new CB
         {
             Action = action,
-            Remaining = duration
+            Remaining = duration,
+            Caller = caller,
+            ShouldCheckCaller = (caller != null)
         });
     }
-    public static void AddFixed(Action action, float duration)
+    public static void AddFixed(Action action, float duration, GameObject caller = null)
     {
         t.fixedCallbacks.Add(new CB
         {
             Action = action,
-            Remaining = duration
+            Remaining = duration,
+            Caller = caller,
+            ShouldCheckCaller = (caller != null)
         });
     }
 }
@@ -96,5 +88,7 @@ public class Callbacks : MonoBehaviour
 class CB
 {
     public float Remaining;
-    public Action Action; 
+    public Action Action;
+    public GameObject Caller;
+    public bool ShouldCheckCaller;
 }

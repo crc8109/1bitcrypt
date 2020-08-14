@@ -6,7 +6,7 @@ using UnityEngine;
 using UnityEngine.PlayerLoop;
 
 [RequireComponent(typeof(Info))]
-public class Character : MonoBehaviour, ISize, IComm
+public class Character : MonoBehaviour, IComm
 {
     [SerializeField]
     float speed = 16;
@@ -17,21 +17,17 @@ public class Character : MonoBehaviour, ISize, IComm
     float jumpSpeed = 10;
     [SerializeField]
     float jumpDuration = 3; 
-    Vector3 lastDir;
+    Vector3 lastDir = Vector3.up;
     ControlStyle control = ControlStyle.INPUT;
-    MotionCurve motionCurve; 
-
-    public int Width => (int)(8 * GameManager.PixelSize);
-
-    public int Height => (int)(8 * GameManager.PixelSize);
-
-    public Vector2 Center => transform.position;
+    MotionCurve motionCurve;
+    public Info Info {get; private set;}
 
     public int[] SenderID { get; } = new int[] { 1, 2, 3, 4, 5 };
 
     private void Awake()
     {
         position = transform.position; 
+        Info = GetComponent<Info>(); 
     }
 
     private void Update()
@@ -94,7 +90,7 @@ public class Character : MonoBehaviour, ISize, IComm
     void Shoot()
     {
         var arrow = Instantiate(projectilePrefab);
-        var arrowPos = Util.GetExtentPos(this, Util.PosFromVec(lastDir));
+        var arrowPos = Util.GetExtentPos(Info, Util.PosFromVec(lastDir));
         arrow.Setup(arrowPos, lastDir);
     }
 

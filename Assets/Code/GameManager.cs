@@ -7,7 +7,9 @@ public class GameManager : MonoBehaviour
     static GameManager t;
     [SerializeField]
     float pixelSize = 0.25f;
-    
+    [SerializeField] 
+    SpriteRenderer pixelPrefab; 
+    public static SpriteRenderer PixelPrefab => t.pixelPrefab; 
     public static float PixelSize => t.pixelSize; 
 
     Character player; 
