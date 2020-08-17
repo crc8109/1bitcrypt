@@ -6,24 +6,23 @@ using Sirenix.OdinInspector;
 public class Info : MonoBehaviour, ISize
 {
     public SpriteColl SpriteColl { get; private set; }
-    SpriteRenderer rend;
+
     public IDamageable Damageable { get; private set; }
 
     [SerializeField]
-    int width = 8;
-    public int Width => (int)(width / rend.sprite.pixelsPerUnit);
-
+    int _width = 8;
+    public int Width => _width;
     [SerializeField]
-    int height = 8;
-    public int Height => (int)(height / rend.sprite.pixelsPerUnit);
+    int _height;
 
-    public Vector2 Center => new Vector2(transform.position.x, transform.position.y);
+    public int Height => _width; 
 
-    public bool CanBeDamaged => Damageable != null;
+    public Vector2 Center => new Vector2(transform.position.x, transform.position.y); 
+
+    public bool CanBeDamaged => Damageable == null; 
 
     void Awake()
     {
-        rend = GetComponentInChildren<SpriteRenderer>();
         SpriteColl = GetComponent<SpriteColl>();
         Damageable = GetComponents<Component>().FirstOrDefault(comp => comp is IDamageable) as IDamageable;
     }

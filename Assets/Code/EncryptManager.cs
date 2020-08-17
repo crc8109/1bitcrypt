@@ -18,7 +18,7 @@ public class EncryptManager : MonoBehaviour
             numsToCovert.Add((int)(num % colors));
             num = num / colors;
         }
-        return numsToCovert.Select(num => EncryptColors[num]).ToList();
+        return numsToCovert.Select(numz => EncryptColors[numz]).ToList();
     }
     void Awake()
     {
