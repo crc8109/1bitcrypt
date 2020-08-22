@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3675540162895235487}
   - component: {fileID: 3675540162895235486}
   - component: {fileID: 3675540162895235485}
+  - component: {fileID: 2113110309652466498}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -86,11 +87,24 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   encryptColors:
-  - {r: 1, g: 0, b: 0, a: 0}
-  - {r: 0, g: 1, b: 0, a: 0}
-  - {r: 0, g: 0, b: 1, a: 0}
-  - {r: 1, g: 1, b: 0, a: 0}
-  - {r: 0, g: 1, b: 1, a: 0}
-  - {r: 1, g: 0, b: 1, a: 0}
-  - {r: 1, g: 1, b: 1, a: 0}
-  - {r: 0, g: 0, b: 0, a: 0}
+  - {r: 1, g: 0, b: 0, a: 1}
+  - {r: 0, g: 1, b: 0, a: 1}
+  - {r: 0, g: 0, b: 1, a: 1}
+  - {r: 1, g: 1, b: 0, a: 1}
+  - {r: 0, g: 1, b: 1, a: 1}
+  - {r: 1, g: 0, b: 1, a: 1}
+  - {r: 1, g: 1, b: 1, a: 1}
+  - {r: 0, g: 0, b: 0, a: 1}
+--- !u!114 &2113110309652466498
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3675540162895235482}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4cb54c2b123f64d048a88c75d45c027b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  messageUIPrefab: {fileID: 6787316674570740207, guid: d8a51c07bb17d465dbcd74e4039b46d1, type: 3}

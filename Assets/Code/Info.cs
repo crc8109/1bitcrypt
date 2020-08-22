@@ -20,6 +20,8 @@ public class Info : MonoBehaviour, ISize
     public Vector2 Center => new Vector2(transform.position.x, transform.position.y); 
 
     public bool CanBeDamaged => Damageable == null; 
+    IComm commComp; 
+
 
     void Awake()
     {

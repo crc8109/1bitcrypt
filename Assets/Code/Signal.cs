@@ -1,7 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using System.Numerics;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
+using Vector3 = UnityEngine.Vector3;
 
 public class Signal : MonoBehaviour
 {
@@ -10,12 +13,15 @@ public class Signal : MonoBehaviour
     public float Speed { get { return speed; } set { speed = value; } }
     [SerializeField]
     float distBeforeSpread = 8;
-    float angleLerp = 0.2f; 
-    Vector3 dir; 
-    public Vector3 Dir { get { return dir; } set
+    float angleLerp = 0.2f;
+    Vector3 dir;
+    public Vector3 Dir
+    {
+        get { return dir; }
+        set
         {
             dir = value;
-            transform.up = dir; 
+            transform.up = dir;
         }
     }
     public float SignalStrength { get; set; } = 64;
@@ -26,17 +32,17 @@ public class Signal : MonoBehaviour
 
     public IComm Sender { get; set; }
     public IComm Receiver { get; set; }
-    public int MessageID { get; set; } 
-    
-    public int[] Message { get; set; }
+    public int MessageID { get; set; }
+
+    public BigInteger[] Message { get; set; }
 
     void Awake()
     {
-        startPos = transform.position; 
+        startPos = transform.position;
     }
     void FixedUpdate()
     {
-        Move(); 
+        Move();
     }
     void Clone(Signal parentSig, Vector3 dir)
     {
@@ -45,28 +51,41 @@ public class Signal : MonoBehaviour
         Receiver = parentSig.Receiver;
         SignalStrength = parentSig.SignalStrength / 2;
         Position = parentSig.Position;
+        Message = parentSig.Message;
     }
     void SpreadSignal()
     {
-        if(SignalStrength > minStrength)
+        if (SignalStrength > minStrength)
         {
             CreateSignal(Vector3.Lerp(transform.up, transform.right, angleLerp));
             CreateSignal(Vector3.Lerp(transform.up, transform.right * -1, angleLerp));
         }
-        Destroy(gameObject); 
+        Destroy(gameObject);
     }
     void CreateSignal(Vector3 dir)
     {
         var signal = Instantiate(this);
-        signal.Clone(this, dir); 
+        signal.Clone(this, dir);
     }
     void Move()
     {
         Position += Dir * speed * Time.fixedDeltaTime;
         transform.position = Util.Round(Position);
-        var distTraveled = (transform.position - startPos).magnitude; 
-        if(distTraveled > distBeforeSpread){
-            SpreadSignal(); 
+        var distTraveled = (transform.position - startPos).magnitude;
+        if (distTraveled > distBeforeSpread)
+        {
+            SpreadSignal();
         }
+    }
+    void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.gameObject == Sender.gameObject)
+            return;
+        var commComp = other.GetComponents<Component>()
+            .Where(comp => comp is IComm)
+            .FirstOrDefault();
+        if (commComp != null)
+            (commComp as IComm).ReceiveMessage(this);
+        Destroy(gameObject);
     }
 }

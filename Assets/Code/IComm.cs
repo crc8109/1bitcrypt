@@ -5,7 +5,9 @@ using UnityEngine;
 
 public interface IComm
 {
-    void ReceiveMessage(int[] message, IComm sender);
+    void ReceiveMessage(Signal signal);
     int[] SenderID { get; } 
+    Sprite BaseSprite { get; }  
     Transform transform { get; } 
+    GameObject gameObject {get;}
 }

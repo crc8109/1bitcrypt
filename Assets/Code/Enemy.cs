@@ -24,6 +24,10 @@ public class Enemy : MonoBehaviour, IDamageable, IComm
     Countdown countdown;
     [SerializeField]
     Signal signalPrefab;
+    SpriteRenderer rend;
+    Sprite baseSprite;
+    public Sprite BaseSprite => baseSprite;
+
     EnemyStates currState = EnemyStates.WANDERING;
     public int[] SenderID { get; } = new int[] { 2, 3, 1, 4 };
     public Info Info { get; private set; }
@@ -33,6 +37,8 @@ public class Enemy : MonoBehaviour, IDamageable, IComm
         currentHealth = health;
         position = transform.position;
         Info = GetComponent<Info>();
+        rend = GetComponent<SpriteRenderer>();
+        baseSprite = rend.sprite;
     }
     void Start()
     {
@@ -78,6 +84,7 @@ public class Enemy : MonoBehaviour, IDamageable, IComm
         signal.Dir = (GameManager.Player.transform.position - transform.position).normalized;
         signal.Sender = this;
         signal.Receiver = GameManager.Player;
+        signal.Message = new System.Numerics.BigInteger[] { EncryptManager.StringToBigInt("AreYouAFriend") };
     }
     void Timeout()
     {
@@ -112,7 +119,7 @@ public class Enemy : MonoBehaviour, IDamageable, IComm
         }
     }
 
-    public void ReceiveMessage(int[] message, IComm sender)
+    public void ReceiveMessage(Signal signal)
     {
 
     }
